@@ -1,0 +1,8 @@
+Description: "Mappings template for MyVPC Stack"
+ 
+Mappings:
+  RegionMap:
+    us-east-1:
+      AZ: us-east-1a
+    us-west-2:
+      AZ: us-west-2a

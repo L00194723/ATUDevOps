@@ -1,0 +1,12 @@
+Description: "Parameters for MyVPC Stack"
+Parameters:
+  VpcCidr:
+    Type: String
+Default: "10.0.0.0/16"
+    Description: "CIDR block for the VPC"
+ 
+  PublicSubnetCidr:
+    Type: String
+Default: "10.0.1.0/24"
+    Description: "Public subnet CIDR"
+ 

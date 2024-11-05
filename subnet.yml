@@ -1,0 +1,13 @@
+Description: "Subnet Template"
+ 
+Resources:
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue VpcId
+      CidrBlock: !ImportValue PublicSubnetCidr
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !ImportValue RegionMapAZ
+      Tags:
+        - Key: Name
+          Value: "PublicSubnet"

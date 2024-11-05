@@ -1,0 +1,29 @@
+Description: "Root Template for VPC Stack"
+ 
+Resources:
+  ParametersStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 
+ 
+  MappingsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+ 
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+ 
+  SubnetStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+ 
+  RouteTableStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 
+ 
+ 

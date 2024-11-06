@@ -1,13 +1,45 @@
 Description: "VPC Template"
+ Description: "VPC stack template using mappings and Parameters"
  
-Resources:
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-0ff8a91507f77f867
+    us-west-2:
+      AMI: ami-0bdb828fd58c52235
+    eu-west-1
+      AMI: ami-0d6390e8c3153afff
+ 
+Parameters:
+  VpcCIDR:
+    Type: String
+Default: "10.0.0.0/16"
+    Description: "VPC CIDR Block."
+ 
+  Environment:
+    Type: String
+    Default: "dev"
+    AllowedValues:
+      - dev
+      - prod
+    Description: "Available Environment options dev or prod."
+ 
+RResources:
   MyVPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: !ImportValue VpcCidr
+      CidrBlock: !Ref VpcCIDR
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: "MyVPC"
+          Value: !Sub "${Environment}-vpc"
+ 
+Outputs:
+  VpcId:
+    Description: "VPC ID"
+    Value: !Ref MyVPC
+    Export:
+      Name: !Sub "${Environment}-VpcId"
+
  

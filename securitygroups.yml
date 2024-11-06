@@ -1,0 +1,124 @@
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH traffic
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: MySecurityGroup
+ 
+Outputs:
+  VPCId:
+    Description: The VPC ID
+    Value: !Ref MyVPC
+ 
+  SubnetId:
+    Description: The Subnet ID
+    Value: !Ref MySubnet
+ 
+  SecurityGroupId:
+    Description: The Security Group ID
+    Value: !Ref MySecurityGroup
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  # Security Group
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref MyVPC
+      GroupDescription: "Security group for ${Environment} environment"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"  # Adjust for specific IPs in production
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"  # Allow HTTP traffic
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Sub "${Environment}-security-group"
+ 
+Outputs:
+  VpcId:
+    Description: "VPC ID"
+    Value: !Ref MyVPC
+ 
+  SubnetId:
+    Description: "Subnet ID"
+    Value: !Ref MySubnet
+ 
+  SecurityGroupId:
+    Description: "Security Group ID"
+    Value: !Ref MySecurityGroup
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+3. Security Group Template (security-group.yml)
+This template creates a security group within the VPC.
+ 
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Security Group Stack"
+ 
+Parameters:
+  VpcId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>
+    Description: "VPC ID from VPC stack."
+ 
+  Environment:
+    Type: String
+    Default: "dev"
+    AllowedValues:
+      - dev
+      - prod
+    Description: "Environment name, e.g., dev or prod."
+ 
+Resources:
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VpcId
+      GroupDescription: "Security group for ${Environment} environment"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"  # Adjust for specific IPs in production
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"  # Allow HTTP traffic
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Sub "${Environment}-security-group"
+ 
+Outputs:
+  SecurityGroupId:
+    Description: "Security Group ID"
+    Value: !Ref MySecurityGroup
+    Export:
+      Name: !Sub "${Environment}-SecurityGroupId"
+ 

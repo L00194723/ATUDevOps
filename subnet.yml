@@ -3,12 +3,13 @@ Description: "Subnet Stack"
  
 Parameters:
   VpcId:
-    Type: AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>
     Description: "VPC ID from VPC stack."
+    Type: String
+   
  
   SubnetCIDR:
     Type: String
-Default: "10.0.1.0/24"
+    Default: "10.0.1.0/24"
     Description: "The CIDR block for the subnet."
  
   Environment:

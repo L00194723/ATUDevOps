@@ -1,13 +1,39 @@
-Description: "Subnet Template"
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Subnet Stack"
+ 
+Parameters:
+  VpcId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>
+    Description: "VPC ID from VPC stack."
+ 
+  SubnetCIDR:
+    Type: String
+Default: "10.0.1.0/24"
+    Description: "The CIDR block for the subnet."
+ 
+  Environment:
+    Type: String
+    Default: "dev"
+    AllowedValues:
+      - dev
+      - prod
+    Description: "Environment name, e.g., dev or prod."
  
 Resources:
-  PublicSubnet:
+  MySubnet:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !ImportValue VpcId
-      CidrBlock: !ImportValue PublicSubnetCidr
+      VpcId: !Ref VpcId
+      CidrBlock: !Ref SubnetCIDR
       MapPublicIpOnLaunch: true
-      AvailabilityZone: !ImportValue RegionMapAZ
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
       Tags:
         - Key: Name
-          Value: "PublicSubnet"
+          Value: !Sub "${Environment}-subnet"
+ 
+Outputs:
+  SubnetId:
+    Description: "Subnet ID"
+    Value: !Ref MySubnet
+    Export:
+      Name: !Sub "${Environment}-SubnetId"
